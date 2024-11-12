@@ -1,5 +1,5 @@
-function [MSE,RC]=jdes_dflt(fname) 
-% jdes_dflt: Descompresion de imagenes aplicando tablas de Huffman
+function [MSE,RC]=jdes_custom(fname) 
+% jdes_custom: Descompresion de imagenes aplicando tablas a medida
 
 % Entradas:
 %  fname: Un string con nombre de archivo, incluido sufijo
@@ -11,7 +11,7 @@ function [MSE,RC]=jdes_dflt(fname)
 disptext=1; % Flag de verbosidad
 if disptext
     disp('--------------------------------------------------');
-    disp('Funcion jdes_dflt:');
+    disp('Funcion jdes_custom:');
 end
 
 % Leer archivo comprimido
@@ -44,6 +44,8 @@ CodedCr_Bytes = double(uCodedCr_Bytes);
 CodedY = bytes2bits(CodedY_Bytes, longBitsY);
 CodedCb = bytes2bits(CodedCb_Bytes, longBitsCb);
 CodedCr = bytes2bits(CodedCr_Bytes, longBitsCr);
+
+
 
 fclose(fileID);
 
