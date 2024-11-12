@@ -45,16 +45,51 @@ CodedY = bytes2bits(CodedY_Bytes, longBitsY);
 CodedCb = bytes2bits(CodedCb_Bytes, longBitsCb);
 CodedCr = bytes2bits(CodedCr_Bytes, longBitsCr);
 
+LongBitsY = uint32(CodedY_Long);
+LongBitsCb = uint32(CodedCb_Long);
+LongBitsCr = uint32(CodedCr_Long);
 
+LengthY_DC_Bits = double(fread(fileID, 1, 'uint32'));
+LengthCb_DC_Bits = double(fread(fileID, 1, 'uint32'));
+LengthCr_DC_Bits = double(fread(fileID, 1, 'uint32'));
+
+LengthY_DC_Huffval = double(fread(fileID, 1, 'uint32'));
+LengthCb_DC_Huffval = double(fread(fileID, 1, 'uint32'));
+LengthCr_DC_Huffval = double(fread(fileID, 1, 'uint32'));
+
+LengthY_AC_Bits = double(fread(fileID, 1, 'uint32'));
+LengthCb_AC_Bits = double(fread(fileID, 1, 'uint32'));
+LengthCr_AC_Bits = double(fread(fileID, 1, 'uint32'));
+
+LengthY_AC_Huffval = double(fread(fileID, 1, 'uint32'));
+LengthCr_AC_Huffval = double(fread(fileID, 1, 'uint32'));
+LengthCb_AC_Huffval = double(fread(fileID, 1, 'uint32'));
+
+Y_DC_Bits = double(fread(fileID, LengthY_DC_Bits, 'uint32'));
+Cb_DC_Bits = double(fread(fileID, LengthCb_DC_Bits, 'uint32'));
+Cr_DC_Bits = double(fread(fileID, LengthCr_DC_Bits, 'uint32'));
+
+Y_DC_Huffval = double(fread(fileID, LengthY_DC_Huffval, 'uint32'));
+Cb_DC_Huffval = double(fread(fileID, LengthCb_DC_Huffval, 'uint32'));
+Cr_DC_Huffval = double(fread(fileID, LengthCr_DC_Huffval, 'uint32'));
+
+Y_AC_Bits = double(fread(fileID, LengthY_AC_Bits, 'uint32'));
+Cb_AC_Bits = double(fread(fileID, LengthCb_AC_Bits, 'uint32'));
+Cr_AC_Bits = double(fread(fileID, LengthCr_AC_Bits, 'uint32'));
+
+Y_AC_Huffval = double(fread(fileID, LengthY_AC_Huffval, 'uint32'));
+Cr_AC_Huffval = double(fread(fileID, LengthCr_AC_Huffval, 'uint32'));
+Cb_AC_Huffval = double(fread(fileID, LengthCb_AC_Huffval, 'uint32'));
 
 fclose(fileID);
 
 % Archivo descomprimido
 [filepath,name,ext] = fileparts(fname);
-outputFile = strcat(filepath, name,'_des_def.bmp');
+outputFile = strcat(filepath, name,'_des_cus.bmp');
 
+% TODO A PARTIR DE AQUI
 % Decodifica los tres Scans a partir de strings binarios
-XScanrec=DecodeScans_dflt(CodedY,CodedCb,CodedCr,[mamp namp]);
+XScanrec=DecodeScans_custom(CodedY, CodedCb, CodedCr, [mamp namp], Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, Cb_DC_Bits, Cb_DC_Huffval, Cb_AC_Bits, Cb_AC_Huffval, Cr_DC_Bits, Cr_DC_Huffval, Cr_AC_Bits, Cr_AC_Huffval);
 
 % Recupera matrices de etiquetas en orden natural a partir de orden zigzag
 Xlabrec=invscan(XScanrec);
@@ -76,7 +111,12 @@ Xrec=Xrec(1:m,1:n, 1:3);
 imwrite(Xrec, outputFile);
 
 % Relación de compresión de la imagen
-cabecera = 4 * 5; % caliQ, m, n, mamp, namp con 4 bytes
+cabecera = 4 * 5;   % caliQ, m, n, mamp, namp con 4 bytes
+cabecera = cabecera + (LengthY_DC_Bits + LengthCb_DC_Bits + LengthCr_DC_Bits) * 4;
+cabecera = cabecera + (LengthY_DC_Huffval + LengthCb_DC_Huffval + LengthCr_DC_Huffval) * 4;
+cabecera = cabecera + (LengthY_AC_Bits + LengthCb_AC_Bits + LengthCr_AC_Bits) * 4;
+cabecera = cabecera + (LengthY_AC_Huffval + LengthCb_AC_Huffval + LengthCr_AC_Huffval) * 4;
+
 datos = length(uCodedY_Bytes) + length(uCodedCb_Bytes) + length(uCodedCr_Bytes); % tamaño en bytes de los datos
 TF = cabecera + datos;
 
@@ -102,7 +142,7 @@ if disptext
     fprintf('%s %2.5f %s\n', 'Relación de compresión (RC) = ', RC, '%');
     fprintf('%s %2.5f\n', 'Error Cuadrático Medio (MSE) = ', MSE);
    
-    disp('Terminado jdes_dftl');
+    disp('Terminado jdes_custom');
     disp('--------------------------------------------------');
 end
 end
