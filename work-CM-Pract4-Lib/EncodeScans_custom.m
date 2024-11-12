@@ -1,9 +1,5 @@
 % EncodeScans_custom: Codifica en binario los tres scan usando tablas a medida
 % basadas en las frecuencias de los valores presentes en la imagen original
-function [CodedY, CodedCb, CodedCr, Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, Cb_DC_Bits, Cb_DC_Huffval, Cb_AC_Bits, Cb_AC_Huffval, Cr_DC_Bits, Cr_DC_Huffval, Cr_AC_Bits, Cr_AC_Huffval]=EncodeScans_custom(XScan)
-
-% EncodeScans_custom: Codifica en binario los tres scan usando tablas a medida
-% basadas en las frecuencias de los valores presentes en la imagen original
 
 % Entradas:
 %  XScan: Scans de luminancia Y y crominancia Cb y Cr: Matriz mamp x namp X 3
@@ -11,6 +7,7 @@ function [CodedY, CodedCb, CodedCr, Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huf
 %   YScan: Scan de luminancia Y: Matriz mamp x namp
 %   CbScan: Scan de crominancia Cb: Matriz mamp x namp
 %   CrScan: Scan de crominancia Cr: Matriz mamp x namp
+
 % Salidas:
 %   CodedY: String binario con scan Y codificado
 %   CodedCb: String binario con scan Cb codificado
@@ -22,6 +19,11 @@ function [CodedY, CodedCb, CodedCr, Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huf
 %   Cb_DC_Bits: Tabla de bits para DC de crominancia Cb
 %   Cb_DC_Huffval: Tabla de valores Huffman para DC de crominancia Cb
 %   Cb_AC_Bits: Tabla de bits para AC de crominancia Cb
+%   Cb_AC_Huffval: Tabla de valores Huffman para AC de crominancia Cb
+%   Cr_DC_Bits: Tabla de bits para DC de crominancia Cr
+%   Cr_DC_Huffval: Tabla de valores Huffman para DC de crominancia Cr
+%   Cr_AC_Bits: Tabla de bits para AC de crominancia Cr
+%   Cr_AC_Huffval: Tabla de valores Huffman para AC de crominancia Cr
 % *DC: Representa el valor promedio del bloque de píxeles.
 % *AC: Representa las variaciones dentro del bloque de píxeles.
 
