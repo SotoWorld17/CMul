@@ -50,6 +50,18 @@ tc=cputime;
 [Mincode_Cr_DC, Maxcode_Cr_DC, Valptr_Cr_DC] = HDecodingTables(Cr_DC_Bits, Cr_DC_Huffcode);
 [Mincode_Cr_AC, Maxcode_Cr_AC, Valptr_Cr_AC] = HDecodingTables(Cr_AC_Bits, Cr_AC_Huffcode);
 
+disp('Verificando tamaños de tablas Huffman en DecodeScans_custom:');
+disp(['Tamaño de Mincode_Y_DC: ', num2str(length(Mincode_Y_DC))]);
+disp(['Tamaño de Maxcode_Y_DC: ', num2str(length(Maxcode_Y_DC))]);
+disp(['Tamaño de Valptr_Y_DC: ', num2str(length(Valptr_Y_DC))]);
+
+disp('Valores de Mincode_Y_DC:');
+disp(Mincode_Y_DC);
+disp('Valores de Maxcode_Y_DC:');
+disp(Maxcode_Y_DC);
+disp('Valores de Valptr_Y_DC:');
+disp(Valptr_Y_DC);
+
 % Decodificar cada scan
 YScanrec = DecodeSingleScan(CodedY, Mincode_Y_DC, Maxcode_Y_DC, Valptr_Y_DC, Y_DC_Huffval, Mincode_Y_AC, Maxcode_Y_AC, Valptr_Y_AC, Y_AC_Huffval, tam);
 CbScanrec = DecodeSingleScan(CodedCb, Mincode_Cb_DC, Maxcode_Cb_DC, Valptr_Cb_DC, Cb_DC_Huffval, Mincode_Cb_AC, Maxcode_Cb_AC, Valptr_Cb_AC, Cb_AC_Huffval, tam);
