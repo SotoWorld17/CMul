@@ -45,10 +45,6 @@ CodedY = bytes2bits(CodedY_Bytes, longBitsY);
 CodedCb = bytes2bits(CodedCb_Bytes, longBitsCb);
 CodedCr = bytes2bits(CodedCr_Bytes, longBitsCr);
 
-LongBitsY = uint32(CodedY_Long);
-LongBitsCb = uint32(CodedCb_Long);
-LongBitsCr = uint32(CodedCr_Long);
-
 LengthY_DC_Bits = double(fread(fileID, 1, 'uint32'));
 LengthCb_DC_Bits = double(fread(fileID, 1, 'uint32'));
 LengthCr_DC_Bits = double(fread(fileID, 1, 'uint32'));
@@ -144,13 +140,13 @@ if disptext
     fprintf('%s %2.5f %s\n', 'Relación de compresión (RC) = ', RC, '%');
     fprintf('%s %2.5f\n', 'Error Cuadrático Medio (MSE) = ', MSE);
    
-    fprintf('%s %d\n', 'CodedY:', CodedY);
-    fprintf('%s %d\n', 'CodedCb:', CodedCb);
-    fprintf('%s %d\n', 'CodedCr:', CodedCr);
+    fprintf('%s %d %s\n', 'CodedY -> ', length(CodedY), ' bytes');
+    fprintf('%s %d %s\n', 'CodedCb -> ', length(CodedCb), ' bytes');
+    fprintf('%s %d %s\n', 'CodedCr -> ', length(CodedCr), ' bytes');
 
-    fprintf('%s %d\n', 'sbytesY = ', uCodedY_Bytes);
-    fprintf('%s %d\n', 'bytesCb = ', uCodedCb_Bytes);
-    fprintf('%s %d\n', 'bytesCr = ', uCodedCr_Bytes);
+    fprintf('%s %d %s\n', 'sbytesY -> ', length(uCodedY_Bytes), ' bytes');
+    fprintf('%s %d %s\n', 'sbytesCb -> ', length(uCodedCb_Bytes), ' bytes');
+    fprintf('%s %d %s\n', 'sbytesCr -> ', length(uCodedCr_Bytes), ' bytes');
 
     disp('Terminado jdes_custom');
     disp('--------------------------------------------------');

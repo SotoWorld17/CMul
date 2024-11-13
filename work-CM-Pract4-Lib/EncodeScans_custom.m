@@ -1,3 +1,5 @@
+function [CodedY,CodedCb,CodedCr, Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, Cb_DC_Bits, Cb_DC_Huffval, Cb_AC_Bits, Cb_AC_Huffval, Cr_DC_Bits, Cr_DC_Huffval, Cr_AC_Bits, Cr_AC_Huffval]=EncodeScans_custom(XScan) 
+
 % EncodeScans_custom: Codifica en binario los tres scan usando tablas a medida
 % basadas en las frecuencias de los valores presentes en la imagen original
 
@@ -81,6 +83,8 @@ Cr_AC_Freq = Freq256(Cr_AC_ZCP(:,1));
 [ehuf_Cr_AC_CO, ehuf_Cr_AC_SI] = HCodingTables(Cr_AC_Huffsize, Cr_AC_Huffcode, Cr_AC_Huffval);
 
 % Concatenar Ehufco y Ehufsi
+ehuf_Y_DC = [ehuf_Y_DC_CO, ehuf_Y_DC_SI];
+ehuf_Y_AC = [ehuf_Y_AC_CO, ehuf_Y_AC_SI];
 ehuf_Cb_DC = [ehuf_Cb_DC_CO, ehuf_Cb_DC_SI];
 ehuf_Cb_AC = [ehuf_Cb_AC_CO, ehuf_Cb_AC_SI];
 ehuf_Cr_DC = [ehuf_Cr_DC_CO, ehuf_Cr_DC_SI];

@@ -107,13 +107,15 @@ if disptext
     fprintf('%s %d %s %d\n', 'Tamaño original = ', TO, 'Tamaño tras la compresión: ', TF);
     fprintf('%s %2.5f %s\n', 'Relación de compresión (RC) = ', RC, '%');
 
-    fprintf('%s %d\n', 'CodedY:', CodedY);
-    fprintf('%s %d\n', 'CodedCb:', CodedCb);
-    fprintf('%s %d\n', 'CodedCr:', CodedCr);
+    % Mostrar tamaños de componentes
+    fprintf('%s %d %s\n', 'CodedY -> ', length(CodedY), ' bytes');
+    fprintf('%s %d %s\n', 'CodedCb -> ', length(CodedCb), ' bytes');
+    fprintf('%s %d %s\n', 'CodedCr -> ', length(CodedCr), ' bytes');
 
-    fprintf('%s %d\n', 'sbytesY = ', uCodedY_Bytes);
-    fprintf('%s %d\n', 'bytesCb = ', uCodedCb_Bytes);
-    fprintf('%s %d\n', 'bytesCr = ', uCodedCr_Bytes);
+    % Mostrar tamaños de bytes usados por cada componente 
+    fprintf('%s %d %s\n', 'sbytesY -> ', length(uCodedY_Bytes), ' bytes');
+    fprintf('%s %d %s\n', 'sbytesCb -> ', length(uCodedCb_Bytes), ' bytes');
+    fprintf('%s %d %s\n', 'sbytesCr -> ', length(uCodedCr_Bytes), ' bytes');
 
     disp('Terminado jcom_dflt');
     disp('--------------------------------------------------');
