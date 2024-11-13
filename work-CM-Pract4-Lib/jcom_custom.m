@@ -182,7 +182,16 @@ if disptext
     fprintf('%s %1.6f\n', 'Tiempo total de CPU:', e);
     fprintf('%s %d %s %d\n', 'Tamaño original = ', TO, 'Tamaño tras la compresión: ', TF);
     fprintf('%s %2.5f %s\n', 'Relación de compresión (RC) = ', RC, '%');
-    
+    fprintf('%s %2.5f %s\n', 'Error cuadrático medio (MSE) = ', MSE, '%');
+        
+    fprintf('%s %d\n', 'CodedY:', CodedY);
+    fprintf('%s %d\n', 'CodedCb:', CodedCb);
+    fprintf('%s %d\n', 'CodedCr:', CodedCr);
+
+    fprintf('%s %d\n', 'sbytesY = ', uCodedY_Bytes);
+    fprintf('%s %d\n', 'bytesCb = ', uCodedCb_Bytes);
+    fprintf('%s %d\n', 'bytesCr = ', uCodedCr_Bytes);
+
     disp('Terminado jcom_custom');
     disp('--------------------------------------------------');
 end

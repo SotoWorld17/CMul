@@ -97,8 +97,18 @@ if disptext
     title('Imagen Reconstruida');
     imshow(Xrec);
     title('Imagen Reconstruida');
+
+    fprintf('%s %d %s %d\n', 'Tamaño original = ', TO, 'Tamaño tras la compresión: ', TF);
     fprintf('%s %2.5f %s\n', 'Relación de compresión (RC) = ', RC, '%');
     fprintf('%s %2.5f\n', 'Error Cuadrático Medio (MSE) = ', MSE);
+
+    fprintf('%s %d\n', 'CodedY:', CodedY);
+    fprintf('%s %d\n', 'CodedCb:', CodedCb);
+    fprintf('%s %d\n', 'CodedCr:', CodedCr);
+
+    fprintf('%s %d\n', 'sbytesY = ', uCodedY_Bytes);
+    fprintf('%s %d\n', 'bytesCb = ', uCodedCb_Bytes);
+    fprintf('%s %d\n', 'bytesCr = ', uCodedCr_Bytes);
    
     disp('Terminado jdes_dftl');
     disp('--------------------------------------------------');
