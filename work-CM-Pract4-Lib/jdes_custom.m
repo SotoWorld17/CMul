@@ -33,49 +33,37 @@ longBitsY = double(fread(fileID, 1, 'uint32'));
 longBitsCb = double(fread(fileID, 1, 'uint32'));
 longBitsCr = double(fread(fileID, 1, 'uint32'));
 
-uCodedY_Bytes = fread(fileID, lengthBytesY, 'uint32');
-uCodedCb_Bytes = fread(fileID, lengthBytesCb, 'uint32');
-uCodedCr_Bytes = fread(fileID, lengthBytesCr, 'uint32');
-
-CodedY_Bytes = double(uCodedY_Bytes);
-CodedCb_Bytes = double(uCodedCb_Bytes);
-CodedCr_Bytes = double(uCodedCr_Bytes);
+CodedY_Bytes = double(fread(fileID, lengthBytesY, 'uint32'));
+CodedCb_Bytes = double(fread(fileID, lengthBytesCb, 'uint32'));
+CodedCr_Bytes = double(fread(fileID, lengthBytesCr, 'uint32'));
 
 CodedY = bytes2bits(CodedY_Bytes, longBitsY);
 CodedCb = bytes2bits(CodedCb_Bytes, longBitsCb);
 CodedCr = bytes2bits(CodedCr_Bytes, longBitsCr);
 
 LengthY_DC_Bits = double(fread(fileID, 1, 'uint32'));
-LengthCb_DC_Bits = double(fread(fileID, 1, 'uint32'));
-LengthCr_DC_Bits = double(fread(fileID, 1, 'uint32'));
+LengthC_DC_Bits = double(fread(fileID, 1, 'uint32'));
 
 LengthY_DC_Huffval = double(fread(fileID, 1, 'uint32'));
-LengthCb_DC_Huffval = double(fread(fileID, 1, 'uint32'));
-LengthCr_DC_Huffval = double(fread(fileID, 1, 'uint32'));
+LengthC_DC_Huffval = double(fread(fileID, 1, 'uint32'));
 
 LengthY_AC_Bits = double(fread(fileID, 1, 'uint32'));
-LengthCb_AC_Bits = double(fread(fileID, 1, 'uint32'));
-LengthCr_AC_Bits = double(fread(fileID, 1, 'uint32'));
+LengthC_AC_Bits = double(fread(fileID, 1, 'uint32'));
 
 LengthY_AC_Huffval = double(fread(fileID, 1, 'uint32'));
-LengthCr_AC_Huffval = double(fread(fileID, 1, 'uint32'));
-LengthCb_AC_Huffval = double(fread(fileID, 1, 'uint32'));
+LengthC_AC_Huffval = double(fread(fileID, 1, 'uint32'));
 
 Y_DC_Bits = double(fread(fileID, LengthY_DC_Bits, 'uint32'));
-Cb_DC_Bits = double(fread(fileID, LengthCb_DC_Bits, 'uint32'));
-Cr_DC_Bits = double(fread(fileID, LengthCr_DC_Bits, 'uint32'));
+C_DC_Bits = double(fread(fileID, LengthC_DC_Bits, 'uint32'));
 
 Y_DC_Huffval = double(fread(fileID, LengthY_DC_Huffval, 'uint32'));
-Cb_DC_Huffval = double(fread(fileID, LengthCb_DC_Huffval, 'uint32'));
-Cr_DC_Huffval = double(fread(fileID, LengthCr_DC_Huffval, 'uint32'));
+C_DC_Huffval = double(fread(fileID, LengthC_DC_Huffval, 'uint32'));
 
 Y_AC_Bits = double(fread(fileID, LengthY_AC_Bits, 'uint32'));
-Cb_AC_Bits = double(fread(fileID, LengthCb_AC_Bits, 'uint32'));
-Cr_AC_Bits = double(fread(fileID, LengthCr_AC_Bits, 'uint32'));
+C_AC_Bits = double(fread(fileID, LengthC_AC_Bits, 'uint32'));
 
 Y_AC_Huffval = double(fread(fileID, LengthY_AC_Huffval, 'uint32'));
-Cr_AC_Huffval = double(fread(fileID, LengthCr_AC_Huffval, 'uint32'));
-Cb_AC_Huffval = double(fread(fileID, LengthCb_AC_Huffval, 'uint32'));
+C_AC_Huffval = double(fread(fileID, LengthC_AC_Huffval, 'uint32'));
 
 fclose(fileID);
 
@@ -85,7 +73,7 @@ outputFile = strcat(filepath, name,'_des_cus.bmp');
 
 % TODO A PARTIR DE AQUI
 % Decodifica los tres Scans a partir de strings binarios
-XScanrec=DecodeScans_custom(CodedY, CodedCb, CodedCr, [mamp namp], Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, Cb_DC_Bits, Cb_DC_Huffval, Cb_AC_Bits, Cb_AC_Huffval, Cr_DC_Bits, Cr_DC_Huffval, Cr_AC_Bits, Cr_AC_Huffval);
+XScanrec=DecodeScans_custom(CodedY, CodedCb, CodedCr, [mamp namp], Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, C_DC_Bits, C_DC_Huffval, C_AC_Bits, C_AC_Huffval);
 
 % Recupera matrices de etiquetas en orden natural a partir de orden zigzag
 Xlabrec=invscan(XScanrec);
@@ -106,18 +94,11 @@ Xrec=Xrec(1:m,1:n, 1:3);
 % Guardar la imagen descomprimida
 imwrite(Xrec, outputFile);
 
-% Relación de compresión de la imagen
-cabecera = 4 * 5;   % caliQ, m, n, mamp, namp con 4 bytes
-cabecera = cabecera + (LengthY_DC_Bits + LengthCb_DC_Bits + LengthCr_DC_Bits) * 4;
-cabecera = cabecera + (LengthY_DC_Huffval + LengthCb_DC_Huffval + LengthCr_DC_Huffval) * 4;
-cabecera = cabecera + (LengthY_AC_Bits + LengthCb_AC_Bits + LengthCr_AC_Bits) * 4;
-cabecera = cabecera + (LengthY_AC_Huffval + LengthCb_AC_Huffval + LengthCr_AC_Huffval) * 4;
-
-datos = length(uCodedY_Bytes) + length(uCodedCb_Bytes) + length(uCodedCr_Bytes); % tamaño en bytes de los datos
-TF = cabecera + datos;
-
-originalImagePath = strcat(filepath, name, '.bmp');
+originalImagePath = strcat(filepath, name, '_des_cus.bmp');
 [X, Xamp, tipo, m, n, mamp, namp, TO]=imlee(originalImagePath);
+
+TF = dir(fname);
+TF = TF.bytes;
 
 RC = (TO-TF)/TO*100;
 diff = double(X(:)) - double(Xrec(:));
@@ -144,9 +125,9 @@ if disptext
     fprintf('%s %d %s\n', 'CodedCb -> ', length(CodedCb), ' bytes');
     fprintf('%s %d %s\n', 'CodedCr -> ', length(CodedCr), ' bytes');
 
-    fprintf('%s %d %s\n', 'sbytesY -> ', length(uCodedY_Bytes), ' bytes');
-    fprintf('%s %d %s\n', 'sbytesCb -> ', length(uCodedCb_Bytes), ' bytes');
-    fprintf('%s %d %s\n', 'sbytesCr -> ', length(uCodedCr_Bytes), ' bytes');
+    fprintf('%s %d %s\n', 'sbytesY -> ', length(CodedY_Bytes), ' bytes');
+    fprintf('%s %d %s\n', 'sbytesCb -> ', length(CodedCb_Bytes), ' bytes');
+    fprintf('%s %d %s\n', 'sbytesCr -> ', length(CodedCr_Bytes), ' bytes');
 
     disp('Terminado jdes_custom');
     disp('--------------------------------------------------');

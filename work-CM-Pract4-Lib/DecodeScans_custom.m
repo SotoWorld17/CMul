@@ -1,4 +1,4 @@
-function XScanrec=DecodeScans_custom(CodedY,CodedCb,CodedCr,tam,Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, Cb_DC_Bits, Cb_DC_Huffval, Cb_AC_Bits, Cb_AC_Huffval, Cr_DC_Bits, Cr_DC_Huffval, Cr_AC_Bits, Cr_AC_Huffval)
+function XScanrec=DecodeScans_custom(CodedY,CodedCb,CodedCr,tam,Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, C_DC_Bits, C_DC_Huffval, C_AC_Bits, C_AC_Huffval)
 
 % DecodeScans_custom: Decodifica los tres scans binarios usando tablas a medida
 
@@ -11,14 +11,10 @@ function XScanrec=DecodeScans_custom(CodedY,CodedCb,CodedCr,tam,Y_DC_Bits, Y_DC_
 %   Y_DC_Huffval: Tabla de valores Huffman para DC de luminancia
 %   Y_AC_Bits: Tabla de bits para AC de luminancia
 %   Y_AC_Huffval: Tabla de valores Huffman para AC de luminancia
-%   Cb_DC_Bits: Tabla de bits para DC de crominancia Cb
-%   Cb_DC_Huffval: Tabla de valores Huffman para DC de crominancia Cb
-%   Cb_AC_Bits: Tabla de bits para AC de crominancia Cb
-%   Cb_AC_Huffval: Tabla de valores Huffman para AC de crominancia Cb
-%   Cr_DC_Bits: Tabla de bits para DC de crominancia Cr
-%   Cr_DC_Huffval: Tabla de valores Huffman para DC de crominancia Cr
-%   Cr_AC_Bits: Tabla de bits para AC de crominancia Cr
-%   Cr_AC_Huffval: Tabla de valores Huffman para AC de crominancia Cr
+%   C_DC_Bits: Tabla de bits para DC de crominancia 
+%   C_DC_Huffval: Tabla de valores Huffman para DC de crominancia 
+%   C_AC_Bits: Tabla de bits para AC de crominancia 
+%   C_AC_Huffval: Tabla de valores Huffman para AC de crominancia 
 
 % Salidas:
 %  XScanrec: Scans reconstruidos de luminancia Y y crominancia Cb y Cr: Matriz mamp x namp X 3
@@ -37,35 +33,19 @@ tc=cputime;
 % Generar tablas Huffsize y Huffcode
 [Y_DC_Huffsize, Y_DC_Huffcode] = HCodeTables(Y_DC_Bits, Y_DC_Huffval);
 [Y_AC_Huffsize, Y_AC_Huffcode] = HCodeTables(Y_AC_Bits, Y_AC_Huffval);
-[Cb_DC_Huffsize, Cb_DC_Huffcode] = HCodeTables(Cb_DC_Bits, Cb_DC_Huffval);
-[Cb_AC_Huffsize, Cb_AC_Huffcode] = HCodeTables(Cb_AC_Bits, Cb_AC_Huffval);
-[Cr_DC_Huffsize, Cr_DC_Huffcode] = HCodeTables(Cr_DC_Bits, Cr_DC_Huffval);
-[Cr_AC_Huffsize, Cr_AC_Huffcode] = HCodeTables(Cr_AC_Bits, Cr_AC_Huffval);
+[C_DC_Huffsize, C_DC_Huffcode] = HCodeTables(C_DC_Bits, C_DC_Huffval);
+[C_AC_Huffsize, C_AC_Huffcode] = HCodeTables(C_AC_Bits, C_AC_Huffval);
 
 % Generar tablas Mincode, Maxcode y Valptr
 [Mincode_Y_DC, Maxcode_Y_DC, Valptr_Y_DC] = HDecodingTables(Y_DC_Bits, Y_DC_Huffcode);
 [Mincode_Y_AC, Maxcode_Y_AC, Valptr_Y_AC] = HDecodingTables(Y_AC_Bits, Y_AC_Huffcode);
-[Mincode_Cb_DC, Maxcode_Cb_DC, Valptr_Cb_DC] = HDecodingTables(Cb_DC_Bits, Cb_DC_Huffcode);
-[Mincode_Cb_AC, Maxcode_Cb_AC, Valptr_Cb_AC] = HDecodingTables(Cb_AC_Bits, Cb_AC_Huffcode);
-[Mincode_Cr_DC, Maxcode_Cr_DC, Valptr_Cr_DC] = HDecodingTables(Cr_DC_Bits, Cr_DC_Huffcode);
-[Mincode_Cr_AC, Maxcode_Cr_AC, Valptr_Cr_AC] = HDecodingTables(Cr_AC_Bits, Cr_AC_Huffcode);
-
-disp('Verificando tamaños de tablas Huffman en DecodeScans_custom:');
-disp(['Tamaño de Mincode_Y_DC: ', num2str(length(Mincode_Y_DC))]);
-disp(['Tamaño de Maxcode_Y_DC: ', num2str(length(Maxcode_Y_DC))]);
-disp(['Tamaño de Valptr_Y_DC: ', num2str(length(Valptr_Y_DC))]);
-
-disp('Valores de Mincode_Y_DC:');
-disp(Mincode_Y_DC);
-disp('Valores de Maxcode_Y_DC:');
-disp(Maxcode_Y_DC);
-disp('Valores de Valptr_Y_DC:');
-disp(Valptr_Y_DC);
+[Mincode_C_DC, Maxcode_C_DC, Valptr_C_DC] = HDecodingTables(C_DC_Bits, C_DC_Huffcode);
+[Mincode_C_AC, Maxcode_C_AC, Valptr_C_AC] = HDecodingTables(C_AC_Bits, C_AC_Huffcode);
 
 % Decodificar cada scan
 YScanrec = DecodeSingleScan(CodedY, Mincode_Y_DC, Maxcode_Y_DC, Valptr_Y_DC, Y_DC_Huffval, Mincode_Y_AC, Maxcode_Y_AC, Valptr_Y_AC, Y_AC_Huffval, tam);
-CbScanrec = DecodeSingleScan(CodedCb, Mincode_Cb_DC, Maxcode_Cb_DC, Valptr_Cb_DC, Cb_DC_Huffval, Mincode_Cb_AC, Maxcode_Cb_AC, Valptr_Cb_AC, Cb_AC_Huffval, tam);
-CrScanrec = DecodeSingleScan(CodedCr, Mincode_Cr_DC, Maxcode_Cr_DC, Valptr_Cr_DC, Cr_DC_Huffval, Mincode_Cr_AC, Maxcode_Cr_AC, Valptr_Cr_AC, Cr_AC_Huffval, tam);
+CbScanrec = DecodeSingleScan(CodedCb, Mincode_Cb_DC, Maxcode_Cb_DC, Valptr_C_DC, C_DC_Huffval, Mincode_C_AC, Maxcode_C_AC, Valptr_C_AC, C_AC_Huffval, tam);
+CrScanrec = DecodeSingleScan(CodedCr, Mincode_Cr_DC, Maxcode_Cr_DC, Valptr_C_DC, C_DC_Huffval, Mincode_C_AC, Maxcode_C_AC, Valptr_C_AC, C_AC_Huffval, tam);
 
 % Reconstruir matriz 3-D
 XScanrec = cat(3, YScanrec, CbScanrec, CrScanrec);

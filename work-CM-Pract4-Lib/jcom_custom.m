@@ -66,53 +66,42 @@ uLongBitsCb = uint32(CodedCb_Long);
 uLongBitsCr = uint32(CodedCr_Long);
 
 uY_DC_Bits = uint32(Y_DC_Bits);
-uCb_DC_Bits = uint32(Cb_DC_Bits);
-uCr_DC_Bits = uint32(Cr_DC_Bits);
-
+uC_DC_Bits = uint32([Cb_DC_Bits; Cr_DC_Bits]);
 uY_DC_Huffval = uint32(Y_DC_Huffval);
-uCb_DC_Huffval = uint32(Cb_DC_Huffval);
-uCr_DC_Huffval = uint32(Cr_DC_Huffval);
+uC_DC_Huffval = uint32([Cb_DC_Huffval; Cr_DC_Huffval]);
 
 uY_AC_Bits = uint32(Y_AC_Bits);
-uCb_AC_Bits = uint32(Cb_AC_Bits);
-uCr_AC_Bits = uint32(Cr_AC_Bits);
-
+uC_AC_Bits = uint32([Cb_AC_Bits; Cr_AC_Bits]);
 uY_AC_Huffval = uint32(Y_AC_Huffval);
-uCr_AC_Huffval = uint32(Cr_AC_Huffval);
-uCb_AC_Huffval = uint32(Cb_AC_Huffval);
+uC_AC_Huffval = uint32([Cb_AC_Huffval; Cr_AC_Huffval]);
 
 % Length de luminancia y crominancia
 uLengthY_DC_Bits = uint32(length(Y_DC_Bits));
-uLengthCb_DC_Bits = uint32(length(Cb_DC_Bits));
-uLengthCr_DC_Bits = uint32(length(Cr_DC_Bits));
+uLengthC_DC_Bits = uint32([length(Cb_DC_Bits); length(Cr_DC_Bits)]);
 
 uLengthY_DC_Huffval = uint32(length(Y_DC_Huffval));
-uLengthCb_DC_Huffval = uint32(length(Cb_DC_Huffval));
-uLengthCr_DC_Huffval = uint32(length(Cr_DC_Huffval));
+uLengthC_DC_Huffval = uint32([length(Cb_DC_Huffval); length(Cr_DC_Huffval)]);
 
 uLengthY_AC_Bits = uint32(length(Y_AC_Bits));
-uLengthCb_AC_Bits = uint32(length(Cb_AC_Bits));
-uLengthCr_AC_Bits = uint32(length(Cr_AC_Bits));
+uLengthC_AC_Bits = uint32([length(Cb_AC_Bits); length(Cr_AC_Bits)]);
 
 uLengthY_AC_Huffval = uint32(length(Y_AC_Huffval));
-uLengthCr_AC_Huffval = uint32(length(Cr_AC_Huffval));
-uLengthCb_AC_Huffval = uint32(length(Cb_AC_Huffval));
-
+uLengthC_AC_Huffval = uint32([length(Cb_AC_Huffval); length(Cr_AC_Huffval)]);
 
 % Relación de compresión de la imagen
 cabecera = length(caliQ_prep) + length(m_prep) + length(n_prep) + length(mamp_prep) + length(namp_prep);
 cabecera = cabecera + length(uLengthBytesY) + length(uLengthBytesCb) + length(uLengthBytesCr);
 cabecera = cabecera + length(uLongBitsY) + length(uLongBitsCb) + length(uLongBitsCr);
 
-cabecera = cabecera + length(uY_DC_Bits) + length(uCb_DC_Bits) + length(uCr_DC_Bits);
-cabecera = cabecera + length(uY_DC_Huffval) + length(uCb_DC_Huffval) + length(uCr_DC_Huffval);
-cabecera = cabecera + length(uY_AC_Bits) + length(uCb_AC_Bits) + length(uCr_AC_Bits);
-cabecera = cabecera + length(uY_AC_Huffval) + length(uCr_AC_Huffval) + length(uCb_AC_Huffval);
+cabecera = cabecera + length(uY_DC_Bits) + length(uC_DC_Bits);
+cabecera = cabecera + length(uY_DC_Huffval) + length(uC_DC_Huffval);
+cabecera = cabecera + length(uY_AC_Bits) + length(uC_AC_Bits);
+cabecera = cabecera + length(uY_AC_Huffval) + length(uC_AC_Huffval);
 
-cabecera = cabecera + length(uLengthY_DC_Bits) + length(uLengthCb_DC_Bits) + length(uLengthCr_DC_Bits);
-cabecera = cabecera + length(uLengthY_DC_Huffval) + length(uLengthCb_DC_Huffval) + length(uLengthCr_DC_Huffval);
-cabecera = cabecera + length(uLengthY_AC_Bits) + length(uLengthCb_AC_Bits) + length(uLengthCr_AC_Bits);
-cabecera = cabecera + length(uLengthY_AC_Huffval) + length(uLengthCr_AC_Huffval) + length(uLengthCb_AC_Huffval);
+cabecera = cabecera + length(uLengthY_DC_Bits) + length(uLengthC_DC_Bits);
+cabecera = cabecera + length(uLengthY_DC_Huffval) + length(uLengthC_DC_Huffval);
+cabecera = cabecera + length(uLengthY_AC_Bits) + length(uLengthC_AC_Bits);
+cabecera = cabecera + length(uLengthY_AC_Huffval) + length(uLengthC_AC_Huffval);
 
 datos = length(uCodedY_Bytes) + length(uCodedCb_Bytes) + length(uCodedCr_Bytes); % tamaño en bytes de los datos
 TF = cabecera + datos;
@@ -141,32 +130,23 @@ fwrite(fileID, uCodedCr_Bytes, 'uint32');
 
 % Guardar longitudes de cromancia y luminancia
 fwrite(fileID, uLengthY_DC_Bits, 'uint32');
-fwrite(fileID, uLengthCb_DC_Bits, 'uint32');
-fwrite(fileID, uLengthCr_DC_Bits, 'uint32');
+fwrite(fileID, uLengthC_DC_Bits, 'uint32');
 fwrite(fileID, uLengthY_DC_Huffval, 'uint32');
-fwrite(fileID, uLengthCb_DC_Huffval, 'uint32');
-fwrite(fileID, uLengthCr_DC_Huffval, 'uint32');
+fwrite(fileID, uLengthC_DC_Huffval, 'uint32');
 fwrite(fileID, uLengthY_AC_Bits, 'uint32');
-fwrite(fileID, uLengthCb_AC_Bits, 'uint32');
-fwrite(fileID, uLengthCr_AC_Bits, 'uint32');
+fwrite(fileID, uLengthC_AC_Bits, 'uint32');
 fwrite(fileID, uLengthY_AC_Huffval, 'uint32');
-fwrite(fileID, uLengthCr_AC_Huffval, 'uint32');
-fwrite(fileID, uLengthCb_AC_Huffval, 'uint32');
+fwrite(fileID, uLengthC_AC_Huffval, 'uint32');
 
 % Guardar tablas Huffman
 fwrite(fileID, uY_DC_Bits, 'uint32');
 fwrite(fileID, uY_DC_Huffval, 'uint32');
 fwrite(fileID, uY_AC_Bits, 'uint32');
 fwrite(fileID, uY_AC_Huffval, 'uint32');
-fwrite(fileID, uCb_DC_Bits, 'uint32');
-fwrite(fileID, uCb_DC_Huffval, 'uint32');
-fwrite(fileID, uCb_AC_Bits, 'uint32');
-fwrite(fileID, uCb_AC_Huffval, 'uint32');
-fwrite(fileID, uCr_DC_Bits, 'uint32');
-fwrite(fileID, uCr_DC_Huffval, 'uint32');
-fwrite(fileID, uCr_AC_Bits, 'uint32');
-fwrite(fileID, uCr_AC_Huffval, 'uint32');
-
+fwrite(fileID, uC_DC_Bits, 'uint32');
+fwrite(fileID, uC_DC_Huffval, 'uint32');
+fwrite(fileID, uC_AC_Bits, 'uint32');
+fwrite(fileID, uC_AC_Huffval, 'uint32');
 
 fclose(fileID);
 
@@ -195,5 +175,3 @@ if disptext
     disp('--------------------------------------------------');
 end
 end
-
-

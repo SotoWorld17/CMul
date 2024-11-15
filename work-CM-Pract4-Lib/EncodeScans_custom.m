@@ -1,4 +1,4 @@
-function [CodedY,CodedCb,CodedCr, Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, Cb_DC_Bits, Cb_DC_Huffval, Cb_AC_Bits, Cb_AC_Huffval, Cr_DC_Bits, Cr_DC_Huffval, Cr_AC_Bits, Cr_AC_Huffval]=EncodeScans_custom(XScan) 
+function [CodedY,CodedCb,CodedCr, Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, C_DC_Bits, C_DC_Huffval, C_AC_Bits, C_AC_Huffval]=EncodeScans_custom(XScan) 
 
 % EncodeScans_custom: Codifica en binario los tres scan usando tablas a medida
 % basadas en las frecuencias de los valores presentes en la imagen original
@@ -18,14 +18,10 @@ function [CodedY,CodedCb,CodedCr, Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffv
 %   Y_DC_Huffval: Tabla de valores Huffman para DC de luminancia
 %   Y_AC_Bits: Tabla de bits para AC de luminancia
 %   Y_AC_Huffval: Tabla de valores Huffman para AC de luminancia
-%   Cb_DC_Bits: Tabla de bits para DC de crominancia Cb
-%   Cb_DC_Huffval: Tabla de valores Huffman para DC de crominancia Cb
-%   Cb_AC_Bits: Tabla de bits para AC de crominancia Cb
-%   Cb_AC_Huffval: Tabla de valores Huffman para AC de crominancia Cb
-%   Cr_DC_Bits: Tabla de bits para DC de crominancia Cr
-%   Cr_DC_Huffval: Tabla de valores Huffman para DC de crominancia Cr
-%   Cr_AC_Bits: Tabla de bits para AC de crominancia Cr
-%   Cr_AC_Huffval: Tabla de valores Huffman para AC de crominancia Cr
+%   C_DC_Bits: Tabla de bits para DC de crominancia 
+%   C_DC_Huffval: Tabla de valores Huffman para DC de crominancia 
+%   C_AC_Bits: Tabla de bits para AC de crominancia 
+%   C_AC_Huffval: Tabla de valores Huffman para AC de crominancia 
 % *DC: Representa el valor promedio del bloque de píxeles.
 % *AC: Representa las variaciones dentro del bloque de píxeles.
 
@@ -53,48 +49,39 @@ CrScan=XScan(:,:,3);
 % Frecuencias de los valores DC y AC
 Y_DC_Freq = Freq256(Y_DC_CP(:,1));
 Y_AC_Freq = Freq256(Y_AC_ZCP(:,1));
-Cb_DC_Freq = Freq256(Cb_DC_CP(:,1));
-Cb_AC_Freq = Freq256(Cb_AC_ZCP(:,1));
-Cr_DC_Freq = Freq256(Cr_DC_CP(:,1));
-Cr_AC_Freq = Freq256(Cr_AC_ZCP(:,1));
+C_DC_Freq = Freq256([Cb_DC_CP(:,1), Cr_DC_CP(:,1)]);
+C_AC_Freq = Freq256([Cb_AC_ZCP(:,1), Cr_AC_ZCP(:,1)]);
 
 % Generar tablas Bits y Huffval
 [Y_DC_Bits, Y_DC_Huffval] = HSpecTables(Y_DC_Freq);
 [Y_AC_Bits, Y_AC_Huffval] = HSpecTables(Y_AC_Freq);
-[Cb_DC_Bits, Cb_DC_Huffval] = HSpecTables(Cb_DC_Freq);
-[Cb_AC_Bits, Cb_AC_Huffval] = HSpecTables(Cb_AC_Freq);
-[Cr_DC_Bits, Cr_DC_Huffval] = HSpecTables(Cr_DC_Freq);
-[Cr_AC_Bits, Cr_AC_Huffval] = HSpecTables(Cr_AC_Freq);
+[C_DC_Bits, C_DC_Huffval] = HSpecTables(C_DC_Freq);
+[C_AC_Bits, C_AC_Huffval] = HSpecTables(C_AC_Freq);
 
 % Generar tablas Huffsize y Huffcode
 [Y_DC_Huffsize, Y_DC_Huffcode] = HCodeTables(Y_DC_Bits, Y_DC_Huffval);
 [Y_AC_Huffsize, Y_AC_Huffcode] = HCodeTables(Y_AC_Bits, Y_AC_Huffval);
-[Cb_DC_Huffsize, Cb_DC_Huffcode] = HCodeTables(Cb_DC_Bits, Cb_DC_Huffval);
-[Cb_AC_Huffsize, Cb_AC_Huffcode] = HCodeTables(Cb_AC_Bits, Cb_AC_Huffval);
-[Cr_DC_Huffsize, Cr_DC_Huffcode] = HCodeTables(Cr_DC_Bits, Cr_DC_Huffval);
-[Cr_AC_Huffsize, Cr_AC_Huffcode] = HCodeTables(Cr_AC_Bits, Cr_AC_Huffval);
+[C_DC_Huffsize, C_DC_Huffcode] = HCodeTables(C_DC_Bits, C_DC_Huffval);
+[C_AC_Huffsize, C_AC_Huffcode] = HCodeTables(C_AC_Bits, C_AC_Huffval);
+
 
 % Generar tablas Ehufco y Ehufsi
 [ehuf_Y_DC_CO, ehuf_Y_DC_SI] = HCodingTables(Y_DC_Huffsize, Y_DC_Huffcode, Y_DC_Huffval);
 [ehuf_Y_AC_CO, ehuf_Y_AC_SI] = HCodingTables(Y_AC_Huffsize, Y_AC_Huffcode, Y_AC_Huffval);
-[ehuf_Cb_DC_CO, ehuf_Cb_DC_SI] = HCodingTables(Cb_DC_Huffsize, Cb_DC_Huffcode, Cb_DC_Huffval);
-[ehuf_Cb_AC_CO, ehuf_Cb_AC_SI] = HCodingTables(Cb_AC_Huffsize, Cb_AC_Huffcode, Cb_AC_Huffval);
-[ehuf_Cr_DC_CO, ehuf_Cr_DC_SI] = HCodingTables(Cr_DC_Huffsize, Cr_DC_Huffcode, Cr_DC_Huffval);
-[ehuf_Cr_AC_CO, ehuf_Cr_AC_SI] = HCodingTables(Cr_AC_Huffsize, Cr_AC_Huffcode, Cr_AC_Huffval);
+[ehuf_C_DC_CO, ehuf_C_DC_SI] = HCodingTables(C_DC_Huffsize, C_DC_Huffcode, C_DC_Huffval);
+[ehuf_C_AC_CO, ehuf_C_AC_SI] = HCodingTables(C_AC_Huffsize, C_AC_Huffcode, C_AC_Huffval);
 
 % Concatenar Ehufco y Ehufsi
 ehuf_Y_DC = [ehuf_Y_DC_CO, ehuf_Y_DC_SI];
 ehuf_Y_AC = [ehuf_Y_AC_CO, ehuf_Y_AC_SI];
-ehuf_Cb_DC = [ehuf_Cb_DC_CO, ehuf_Cb_DC_SI];
-ehuf_Cb_AC = [ehuf_Cb_AC_CO, ehuf_Cb_AC_SI];
-ehuf_Cr_DC = [ehuf_Cr_DC_CO, ehuf_Cr_DC_SI];
-ehuf_Cr_AC = [ehuf_Cr_AC_CO, ehuf_Cr_AC_SI];
+ehuf_C_DC = [ehuf_C_DC_CO, ehuf_C_DC_SI];
+ehuf_C_AC = [ehuf_C_AC_CO, ehuf_C_AC_SI];
+
 
 % Codifica en binario cada Scan
 % Las tablas de crominancia, ehuf_Cb_DC y ehuf_Cb_AC, se aplican, tanto a Cb, como a Cr
 CodedY=EncodeSingleScan(YScan, Y_DC_CP, Y_AC_ZCP, ehuf_Y_DC, ehuf_Y_AC);
-CodedCb=EncodeSingleScan(CbScan, Cb_DC_CP, Cb_AC_ZCP, ehuf_Cb_DC, ehuf_Cb_AC);
-CodedCr=EncodeSingleScan(CrScan, Cr_DC_CP, Cr_AC_ZCP, ehuf_Cr_DC, ehuf_Cr_AC);
+CodedC=EncodeSingleScan(CbScan, Cb_DC_CP, Cb_AC_ZCP, ehuf_C_DC, ehuf_C_AC);
 
 % Tiempo de ejecucion
 e=cputime-tc;
