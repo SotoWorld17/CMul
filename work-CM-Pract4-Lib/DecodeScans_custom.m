@@ -44,8 +44,8 @@ tc=cputime;
 
 % Decodificar cada scan
 YScanrec = DecodeSingleScan(CodedY, Mincode_Y_DC, Maxcode_Y_DC, Valptr_Y_DC, Y_DC_Huffval, Mincode_Y_AC, Maxcode_Y_AC, Valptr_Y_AC, Y_AC_Huffval, tam);
-CbScanrec = DecodeSingleScan(CodedCb, Mincode_Cb_DC, Maxcode_Cb_DC, Valptr_C_DC, C_DC_Huffval, Mincode_C_AC, Maxcode_C_AC, Valptr_C_AC, C_AC_Huffval, tam);
-CrScanrec = DecodeSingleScan(CodedCr, Mincode_Cr_DC, Maxcode_Cr_DC, Valptr_C_DC, C_DC_Huffval, Mincode_C_AC, Maxcode_C_AC, Valptr_C_AC, C_AC_Huffval, tam);
+CbScanrec = DecodeSingleScan(CodedCb, Mincode_C_DC, Maxcode_C_DC, Valptr_C_DC, C_DC_Huffval, Mincode_C_AC, Maxcode_C_AC, Valptr_C_AC, C_AC_Huffval, tam);
+CrScanrec = DecodeSingleScan(CodedCr, Mincode_C_DC, Maxcode_C_DC, Valptr_C_DC, C_DC_Huffval, Mincode_C_AC, Maxcode_C_AC, Valptr_C_AC, C_AC_Huffval, tam);
 
 % Reconstruir matriz 3-D
 XScanrec = cat(3, YScanrec, CbScanrec, CrScanrec);

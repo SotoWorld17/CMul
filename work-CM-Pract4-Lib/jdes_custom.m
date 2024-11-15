@@ -71,7 +71,6 @@ fclose(fileID);
 [filepath,name,ext] = fileparts(fname);
 outputFile = strcat(filepath, name,'_des_cus.bmp');
 
-% TODO A PARTIR DE AQUI
 % Decodifica los tres Scans a partir de strings binarios
 XScanrec=DecodeScans_custom(CodedY, CodedCb, CodedCr, [mamp namp], Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, C_DC_Bits, C_DC_Huffval, C_AC_Bits, C_AC_Huffval);
 
@@ -94,16 +93,20 @@ Xrec=Xrec(1:m,1:n, 1:3);
 % Guardar la imagen descomprimida
 imwrite(Xrec, outputFile);
 
-originalImagePath = strcat(filepath, name, '_des_cus.bmp');
+originalImagePath = strcat(filepath, name, '.bmp');
 [X, Xamp, tipo, m, n, mamp, namp, TO]=imlee(originalImagePath);
 
-TF = dir(fname);
-TF = TF.bytes;
+cabecera = 4 * 5;   % caliQ, m, n, mamp, namp con 4 bytes
+cabecera = cabecera + (LengthY_DC_Bits + LengthC_DC_Bits) * 4;
+cabecera = cabecera + (LengthY_DC_Huffval + LengthC_DC_Huffval) * 4;
+cabecera = cabecera + (LengthY_AC_Bits + LengthC_AC_Bits) * 4;
+cabecera = cabecera + (LengthY_AC_Huffval + LengthC_AC_Huffval) * 4;
+
+datos = length(CodedY_Bytes) + length(CodedCb_Bytes) + length(CodedCr_Bytes); % tamaño en bytes de los datos
+TF = cabecera + datos;
 
 RC = (TO-TF)/TO*100;
-diff = double(X(:)) - double(Xrec(:));
-squaredDiff = diff.^2;
-MSE = sum(squaredDiff) / numel(X);
+MSE=(sum(sum(sum((double(Xrec)-double(X)).^2))))/(m*n*3);
 
 if disptext
     disp('--------------------------------------------------');
@@ -119,7 +122,7 @@ if disptext
 
     fprintf('%s %d %s %d\n', 'Tamaño original = ', TO, 'Tamaño tras la compresión: ', TF);
     fprintf('%s %2.5f %s\n', 'Relación de compresión (RC) = ', RC, '%');
-    fprintf('%s %2.5f\n', 'Error Cuadrático Medio (MSE) = ', MSE);
+    fprintf('%s %2.5f %s\n', 'Error Cuadrático Medio (MSE) = ', MSE, '%');
    
     fprintf('%s %d %s\n', 'CodedY -> ', length(CodedY), ' bytes');
     fprintf('%s %d %s\n', 'CodedCb -> ', length(CodedCb), ' bytes');

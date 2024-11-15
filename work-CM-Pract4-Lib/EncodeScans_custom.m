@@ -49,8 +49,8 @@ CrScan=XScan(:,:,3);
 % Frecuencias de los valores DC y AC
 Y_DC_Freq = Freq256(Y_DC_CP(:,1));
 Y_AC_Freq = Freq256(Y_AC_ZCP(:,1));
-C_DC_Freq = Freq256([Cb_DC_CP(:,1), Cr_DC_CP(:,1)]);
-C_AC_Freq = Freq256([Cb_AC_ZCP(:,1), Cr_AC_ZCP(:,1)]);
+C_DC_Freq = Freq256([Cb_DC_CP(:,1); Cr_DC_CP(:,1)]);
+C_AC_Freq = Freq256([Cb_AC_ZCP(:,1); Cr_AC_ZCP(:,1)]);
 
 % Generar tablas Bits y Huffval
 [Y_DC_Bits, Y_DC_Huffval] = HSpecTables(Y_DC_Freq);
@@ -81,7 +81,8 @@ ehuf_C_AC = [ehuf_C_AC_CO, ehuf_C_AC_SI];
 % Codifica en binario cada Scan
 % Las tablas de crominancia, ehuf_Cb_DC y ehuf_Cb_AC, se aplican, tanto a Cb, como a Cr
 CodedY=EncodeSingleScan(YScan, Y_DC_CP, Y_AC_ZCP, ehuf_Y_DC, ehuf_Y_AC);
-CodedC=EncodeSingleScan(CbScan, Cb_DC_CP, Cb_AC_ZCP, ehuf_C_DC, ehuf_C_AC);
+CodedCb=EncodeSingleScan(CbScan, Cb_DC_CP, Cb_AC_ZCP, ehuf_C_DC, ehuf_C_AC);
+CodedCr=EncodeSingleScan(CrScan, Cr_DC_CP, Cr_AC_ZCP, ehuf_C_DC, ehuf_C_AC);
 
 % Tiempo de ejecucion
 e=cputime-tc;

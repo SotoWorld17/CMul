@@ -47,7 +47,7 @@ Xlab=quantmat(Xtrans, caliQ);
 XScan=scan(Xlab);
 
 % Codifica los tres scans, usando Huffman por defecto
-[CodedY,CodedCb,CodedCr, Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, Cb_DC_Bits, Cb_DC_Huffval, Cb_AC_Bits, Cb_AC_Huffval, Cr_DC_Bits, Cr_DC_Huffval, Cr_AC_Bits, Cr_AC_Huffval]=EncodeScans_custom(XScan); 
+[CodedY,CodedCb,CodedCr, Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, C_DC_Bits, C_DC_Huffval, C_AC_Bits, C_AC_Huffval]=EncodeScans_custom(XScan); 
 
 [CodedY_Bytes, CodedY_Long] = bits2bytes(CodedY);
 [CodedCb_Bytes, CodedCb_Long] = bits2bytes(CodedCb);
@@ -66,27 +66,27 @@ uLongBitsCb = uint32(CodedCb_Long);
 uLongBitsCr = uint32(CodedCr_Long);
 
 uY_DC_Bits = uint32(Y_DC_Bits);
-uC_DC_Bits = uint32([Cb_DC_Bits; Cr_DC_Bits]);
+uC_DC_Bits = uint32(C_DC_Bits);
 uY_DC_Huffval = uint32(Y_DC_Huffval);
-uC_DC_Huffval = uint32([Cb_DC_Huffval; Cr_DC_Huffval]);
+uC_DC_Huffval = uint32(C_DC_Huffval);
 
 uY_AC_Bits = uint32(Y_AC_Bits);
-uC_AC_Bits = uint32([Cb_AC_Bits; Cr_AC_Bits]);
+uC_AC_Bits = uint32(C_AC_Bits);
 uY_AC_Huffval = uint32(Y_AC_Huffval);
-uC_AC_Huffval = uint32([Cb_AC_Huffval; Cr_AC_Huffval]);
+uC_AC_Huffval = uint32(C_AC_Huffval);
 
 % Length de luminancia y crominancia
 uLengthY_DC_Bits = uint32(length(Y_DC_Bits));
-uLengthC_DC_Bits = uint32([length(Cb_DC_Bits); length(Cr_DC_Bits)]);
+uLengthC_DC_Bits = uint32(length(C_DC_Bits));
 
 uLengthY_DC_Huffval = uint32(length(Y_DC_Huffval));
-uLengthC_DC_Huffval = uint32([length(Cb_DC_Huffval); length(Cr_DC_Huffval)]);
+uLengthC_DC_Huffval = uint32(length(C_DC_Huffval));
 
 uLengthY_AC_Bits = uint32(length(Y_AC_Bits));
-uLengthC_AC_Bits = uint32([length(Cb_AC_Bits); length(Cr_AC_Bits)]);
+uLengthC_AC_Bits = uint32(length(C_AC_Bits));
 
 uLengthY_AC_Huffval = uint32(length(Y_AC_Huffval));
-uLengthC_AC_Huffval = uint32([length(Cb_AC_Huffval); length(Cr_AC_Huffval)]);
+uLengthC_AC_Huffval = uint32(length(C_AC_Huffval));
 
 % Relación de compresión de la imagen
 cabecera = length(caliQ_prep) + length(m_prep) + length(n_prep) + length(mamp_prep) + length(namp_prep);
@@ -140,12 +140,15 @@ fwrite(fileID, uLengthC_AC_Huffval, 'uint32');
 
 % Guardar tablas Huffman
 fwrite(fileID, uY_DC_Bits, 'uint32');
-fwrite(fileID, uY_DC_Huffval, 'uint32');
-fwrite(fileID, uY_AC_Bits, 'uint32');
-fwrite(fileID, uY_AC_Huffval, 'uint32');
 fwrite(fileID, uC_DC_Bits, 'uint32');
+
+fwrite(fileID, uY_DC_Huffval, 'uint32');
 fwrite(fileID, uC_DC_Huffval, 'uint32');
+
+fwrite(fileID, uY_AC_Bits, 'uint32');
 fwrite(fileID, uC_AC_Bits, 'uint32');
+
+fwrite(fileID, uY_AC_Huffval, 'uint32');
 fwrite(fileID, uC_AC_Huffval, 'uint32');
 
 fclose(fileID);
