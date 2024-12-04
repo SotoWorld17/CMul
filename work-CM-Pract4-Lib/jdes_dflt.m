@@ -49,7 +49,7 @@ fclose(fileID);
 
 % Archivo descomprimido
 [filepath,name,ext] = fileparts(fname);
-outputFile = strcat(filepath, '/descomprimidasDefault/', name,'_des_def.bmp');
+outputFile = strcat('imagenes/default/', name,'_des_def.bmp');
 
 % Decodifica los tres Scans a partir de strings binarios
 XScanrec=DecodeScans_dflt(CodedY,CodedCb,CodedCr,[mamp namp]);

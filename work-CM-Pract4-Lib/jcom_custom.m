@@ -110,7 +110,7 @@ RC = (TO-TF)/TO*100;
 
 % Archivo comprimido
 [filepath,name,ext] = fileparts(fname);
-archivo = strcat(filepath, '/comprimidasCustom/', name,'.huc');
+archivo = strcat('imagenes/custom/', name,'.huc');
 fileID = fopen(archivo, 'w');
 
 fwrite(fileID, [m_prep, n_prep, mamp_prep, namp_prep, caliQ_prep], 'uint32');
