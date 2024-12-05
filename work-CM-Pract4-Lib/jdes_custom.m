@@ -93,7 +93,7 @@ Xrec=Xrec(1:m,1:n, 1:3);
 % Guardar la imagen descomprimida
 imwrite(Xrec, outputFile);
 
-originalImagePath = strcat(filepath, name, '.bmp');
+originalImagePath = strcat('imagenes/', name, '.bmp');
 [X, Xamp, tipo, m, n, mamp, namp, TO]=imlee(originalImagePath);
 
 cabecera = 4 * 5;   % caliQ, m, n, mamp, namp con 4 bytes

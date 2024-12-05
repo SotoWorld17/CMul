@@ -78,7 +78,7 @@ cabecera = 4 * 5; % caliQ, m, n, mamp, namp con 4 bytes
 datos = length(uCodedY_Bytes) + length(uCodedCb_Bytes) + length(uCodedCr_Bytes); % tamaño en bytes de los datos
 TF = cabecera + datos;
 
-originalImagePath = strcat(filepath, name, '.bmp');
+originalImagePath = strcat('imagenes/', name, '.bmp');
 [X, Xamp, tipo, m, n, mamp, namp, TO]=imlee(originalImagePath);
 
 RC = (TO-TF)/TO*100;
