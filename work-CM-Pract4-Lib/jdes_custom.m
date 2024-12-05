@@ -69,7 +69,7 @@ fclose(fileID);
 
 % Archivo descomprimido
 [filepath,name,ext] = fileparts(fname);
-outputFile = strcat('imagenes/custom/', name,'_des_cus.bmp');
+outputFile = strcat('imagenes/custom/', name,num2str(caliQ),'_des_cus.bmp');
 
 % Decodifica los tres Scans a partir de strings binarios
 XScanrec=DecodeScans_custom(CodedY, CodedCb, CodedCr, [mamp namp], Y_DC_Bits, Y_DC_Huffval, Y_AC_Bits, Y_AC_Huffval, C_DC_Bits, C_DC_Huffval, C_AC_Bits, C_AC_Huffval);
