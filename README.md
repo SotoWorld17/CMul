@@ -1,5 +1,8 @@
 # Proyecto Final – Image Compression Based on DCT
 
+## Memoria del proyecto
+https://www.overleaf.com/read/yvbnzrpnnkpp#0c3626
+
 ## English
 
 This repository contains the final degree project on multimedia image compression for the Computer Engineering program at the University of Murcia. It implements and evaluates JPEG compression based on the Discrete Cosine Transform (DCT), comparing default and custom Huffman coding tables across a dataset of 12 BMP images. :contentReference[oaicite:3]{index=3}
